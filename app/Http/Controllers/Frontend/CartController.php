@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Order_Details;
 
 class CartController extends Controller
 {
@@ -46,4 +48,33 @@ class CartController extends Controller
             return redirect()->back()->withSuccess('Product has been deleted from cart');
     
         }
-}
+
+        public function orderComplete(Request $request)
+         { $order= new Order();
+           $order->product_id= $request->product_id;
+           $order->vendor_id= $request->vendor_id;
+           $order->user_id= auth()->check() ? auth()->user()->id: 1;
+           $order->total_price=  $request->total_price;
+           $order->total_qty=  $request->total_qty;
+           $order->save();
+  
+         if($order->save()){
+           $orderDetails = new Order_Details();
+           $orderDetails->order_id = $order->id;
+           $orderDetails->name =$request->name;
+           $orderDetails->email =$request->email;
+           $orderDetails->phone =$request->phone;
+           $orderDetails->address =$request->address;
+           $orderDetails->save();
+    }    
+          $cartEmpty = Cart::where('user_id', auth()->user()->id)->get();
+          foreach($cartEmpty as $cart){
+          $cart->delete();
+    }
+        return redirect('/')->withSuccess('Your order has been completed');
+        }
+
+    
+} 
+
+

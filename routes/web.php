@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [FrontendController::class, 'index']);
-
+Route::get('/product/details/{id}', [FrontendController::class, 'productDetails']);
 //CartController
 Route::post('/add/to/cart', [CartController::class, 'addToCart']);
 Route::get('/checkout', [CartController::class, 'checkout']);

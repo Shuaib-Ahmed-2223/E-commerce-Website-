@@ -28,4 +28,11 @@ class FrontendController extends Controller
 
     return view('frontend.user.auth');
     }
+
+    public function  productDetails($id)
+{ 
+  $product = Product::find($id);
+  return view('frontend.home.product-details', compact('product'));
+}
+
 }

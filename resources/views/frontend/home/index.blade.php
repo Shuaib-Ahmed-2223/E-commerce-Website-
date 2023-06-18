@@ -175,7 +175,7 @@
 	<input type='hidden' name='product_id' value='{{ $product->id }}'/> 
 	<input type='hidden' name='price' value='{{ $product->price }}'/> 
 													<div class="women">
-										<h6><a href="#">{{ $product->name }}</a></h6>
+										<h6><a href="{{ url('/product/details'.$product->id) }}">{{ $product->name }}</a></h6>
 										<span class="size">{{ $product->size->name }}</span>
 										<p ><em class="item_price">${{ $product->price }}</em></p>
 										@if (auth()->check())
