@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 
 class FrontendController extends Controller
 {
@@ -33,6 +34,16 @@ class FrontendController extends Controller
 { 
   $product = Product::find($id);
   return view('frontend.home.product-details', compact('product'));
+}
+
+public function  customerReview(Request $request)
+{ 
+  $rating = new Review();
+  $rating->user_id = auth()->user()->id;
+  $rating->rating = $request->rating;
+  $rating->message = $request->message;
+  $rating->save();
+  return redirect()->back()->withSuccess('Thanks for your rating');
 }
 
 }

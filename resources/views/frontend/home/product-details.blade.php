@@ -1,4 +1,42 @@
 @extends('frontend.master')
+@push('style')
+<style>
+	.rating {
+  margin-top: 10px;
+  border: none;
+  float: left;
+}
+
+.rating > label {
+  color: #90A0A3;
+  float: right;
+}
+
+.rating > label:before {
+  margin: 5px;
+  font-size: 2em;
+  font-family: FontAwesome;
+  content: "\f005";
+  display: inline-block;
+}
+
+.rating > input {
+  display: none;
+}
+
+.rating > input:checked ~ label,
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #F79426;
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label,
+.rating > input:checked ~ label:hover ~ label {
+  color: #FECE31;
+}
+</style>
 @section('content')
 <div class="banner1">
 			<div class="container">
@@ -17,17 +55,13 @@
 							<div clas="single-top">
 								<div class="single-left">
 									<div class="flexslider">
-										<ul class="slides">
-											<li data-thumb="images/si.jpg">
-												<div class="thumb-image"> <img src="images/si.jpg" data-imagezoom="true" class="img-responsive"> </div>
+                                    <ul class="slides">
+                                            @foreach(json_decode($product->multi_image) as $gallery)
+                                            <li data-thumb="{{ asset('/gallery/'.$gallery) }}">
+												<div class="thumb-image"> <img src="{{ asset('/gallery/'.$gallery) }}" data-imagezoom="true" class="img-responsive"> </div>
 											</li>
-											<li data-thumb="images/si1.jpg">
-												 <div class="thumb-image"> <img src="images/si1.jpg" data-imagezoom="true" class="img-responsive"> </div>
-											</li>
-											<li data-thumb="images/si2.jpg">
-											   <div class="thumb-image"> <img src="images/si2.jpg" data-imagezoom="true" class="img-responsive"> </div>
-											</li> 
-										 </ul>
+                                            @endforeach
+											</ul>
 									</div>
 								</div>
 								<div class="single-right simpleCart_shelfItem">
@@ -39,7 +73,25 @@
 									<div class="description">
 										<p><span>Quick Overview : </span> In cursus faucibus tortor eu vestibulum. Ut eget turpis ac justo porta varius. Donec vel felis ante, ac vehicula ipsum. Quisque sed diam metus. Quisque eget leo sit amet erat varius rutrum vitae dapibus lectus. Vivamus et sapien ante. Suspendisse potenti. Fusce in tellus est, ac consequat.</p>
 									</div>
-									<div class="color-quality">
+                                    <form action="{{ url('/add/to/cart') }}" method="post">
+                                                        @csrf
+                                                            <input type="hidden" name='vendor_id'  value="{{ $product->vendor_id }}" />
+                                                            <input type="hidden" name='product_id'  value="{{ $product->id }}" />
+                                                            <input type="hidden" name='price'  value="{{ $product->price }}" />
+                                                        <div class="women">
+                                                            <h6><a href="{{url('/product/details/'.$product->id)}}">{{ $product->name }}</a></h6>
+                                                            <span class="size">Size:{{ $product->size->name }} </span>
+                                                            <p ><em class="item_price">Price: ${{ $product->price }}</em></p>
+                                                            <input type='number' name='qty' value= '1' min='1'/>
+                                                            @if (auth()->check())
+                                                            <button class="btn btn-sm btn-primary" type='submit'>Add to cart</button>
+                                                            @else
+                                                            <a href="{{ url('/login') }}" data-text="Add To Cart" class="my-cart-b item_add">Add To Cart</a>
+                                                            @endif
+                                                            
+                                                       </div>
+                                                        </form>
+									<!-- <div class="color-quality">
 										<h6>Quality :</h6>
 											<div class="quantity"> 
 												<div class="quantity-select">                           
@@ -61,7 +113,7 @@
 														});
 														</script>
 													<!--quantity-->
-									</div>
+									<!-- </div>
 									<div class="women">
 										<span class="size">XL / XXL / S </span>
 										<a href="#" data-text="Add To Cart" class="my-cart-b item_add">Add To Cart</a>
@@ -71,7 +123,7 @@
 										<a href="#"><i class="icon1"></i></a>
 										<a href="#"><i class="icon2"></i></a>
 										<a href="#"><i class="icon3"></i></a>
-									</div>
+									</div> --> 
 								</div>
 								<div class="clearfix"> </div>
 							</div>
@@ -295,30 +347,47 @@
 															</div>
 															<div class="clearfix"></div>
 														</div>
+														@if(auth()->check())
 														<div class="reviews-bottom">
 															<h4>Add Reviews</h4>
 															<p>Your email address will not be published. Required fields are marked *</p>
 															<p>Your Rating</p>
-															<div class="block">
-																<div class="starbox small ghosting"><div class="positioner"><div class="stars"><div class="ghost" style="width: 42.5px; display: none;"></div><div class="colorbar" style="width: 42.5px;"></div><div class="star_holder"><div class="star star-0"></div><div class="star star-1"></div><div class="star star-2"></div><div class="star star-3"></div><div class="star star-4"></div></div></div></div></div>
+															
 															</div>
-															<form action="#" method="post">
-																<label>Your Review </label>
-																<textarea type="text" Name="Message" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required="">Message...</textarea>
-																<div class="row">
-																	<div class="col-md-6 row-grid">
-																		<label>Name</label>
-																		<input type="text" value="Name" Name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">
-																	</div>
-																	<div class="col-md-6 row-grid">
-																		<label>Email</label>
-																		<input type="email" value="Email" Name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
-																	</div>
-																	<div class="clearfix"></div>
+															<form action="{{ url('/review/store') }}" method="post">
+															@csrf
+															<div class="block">
+															<div class="rating">
+							<input type="radio" id="star5" name="rating" value="5" />
+							<label class="star" for="star5" title="Awesome" aria-hidden="true"></label>
+							<input type="radio" id="star4" name="rating" value="4" />
+							<label class="star" for="star4" title="Great" aria-hidden="true"></label>
+							<input type="radio" id="star3" name="rating" value="3" />
+							<label class="star" for="star3" title="Very good" aria-hidden="true"></label>
+							<input type="radio" id="star2" name="rating" value="2" />
+							<label class="star" for="star2" title="Good" aria-hidden="true"></label>
+							<input type="radio" id="star1" name="rating" value="1" />
+							<label class="star" for="star1" title="Bad" aria-hidden="true"></label>
+							</div>
 																</div>
-																<input type="submit" value="SEND">
+																<div class='col-md-12'>
+																	<label>Message</label>
+																	<textarea class='form-control' name='message' rows='5' placholder='Enter your review message'></textarea> 
+															<div class='form-group'>
+															<button type='submit' class='btn btn-sm btn-primary'>Submit</button>
+															</div>
+																</div>
+															
+													<div class="clearfix"></div>
+																</div>
+															
 															</form>
 														</div>
+														@else
+														<div class='alert alert-danger'>
+														<p><a href="{{ url('/user/login') }}" style="text-align:center; font-size:24px; color:black; font-weight:600;">Login</a></p>
+														@endif
+												
 													</div>
 												</div>
 												<div role="tabpanel" class="tab-pane fade" id="custom" aria-labelledby="custom-tab">

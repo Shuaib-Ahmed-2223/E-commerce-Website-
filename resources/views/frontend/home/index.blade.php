@@ -87,48 +87,61 @@
 				</div>
 			<!--banner-bottom-->
 			<!--new-arrivals-->
-				<div class="new-arrivals-w3agile">
-					<div class="container">
-						<h2 class="tittle">New Arrivals</h2>
-						<div class="arrivals-grids">
-							@foreach ($new_products as $product)
-							<div class="col-md-3 arrival-grid simpleCart_shelfItem">
-								<div class="grid-arr">
-									<div  class="grid-arrival">
-										<figure>		
-											<a href="#" class="new-gri" data-toggle="modal" data-target="#myModal1">
-												<div class="grid-img">
-													<img  src="{{ asset('/product/'.$product->image) }}" class="img-responsive" alt="">
-												</div>
-												<div class="grid-img">
-													<img src="{{ asset('/product/'.$product->image) }}" class="img-responsive"  alt="">
-												</div>			
-											</a>		
-										</figure>	
-									</div>
-									<div class="ribben">
-										<p>NEW</p>
-									</div>
-									<div class="ribben1">
-										<p>SALE</p>
-									</div>
-									<div class="block">
-										<div class="starbox small ghosting"> </div>
-									</div>
-									<div class="women">
-										<h6><a href="single.html">{{ $product->name }}</a></h6>
-										<span class="size">{{ $product->size->name }}</span>
-										<p ><em class="item_price">${{ $product->price }}</em></p>
-										<a href="#" data-text="Add To Cart" class="my-cart-b item_add">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-							@endforeach
-							
-							<div class="clearfix"></div>
-						</div>
-					</div>
-				</div>
+				 <!--new-arrivals-->
+				 <div class="new-arrivals-w3agile">
+                                        <div class="container">
+                                            <h2 class="tittle">New Arrivals</h2>
+                                            <div class="arrivals-grids">
+                                                @foreach($new_products as $product)
+
+                                                @endforeach
+                                                <div class="col-md-3 arrival-grid simpleCart_shelfItem">
+                                                    <div class="grid-arr">
+                                                        <div  class="grid-arrival">
+                                                            <figure>		
+                                                                <a href="{{url('/product/details/'.$product->id)}}" class="new-gri">
+                                                                    <div class="grid-img">
+                                                                        <img  src="{{ asset('/product/'.$product->image) }}" class="img-responsive" alt="">
+                                                                    </div>
+                                                                    <div class="grid-img">
+                                                                        <img  src="{{ asset('/product/'.$product->image) }}" class="img-responsive"  alt="">
+                                                                    </div>			
+                                                                </a>		
+                                                            </figure>	
+                                                        </div>
+                                                        <div class="ribben">
+                                                            <p>NEW</p>
+                                                        </div>
+                                                        <div class="ribben1">
+                                                            <p>SALE</p>
+                                                        </div>
+                                                        <div class="block">
+                                                            <div class="starbox small ghosting"> </div>
+                                                        </div>
+                                                        <form action="{{ url('/add/to/cart') }}" method="post">
+                                                        @csrf
+                                                            <input type="hidden" name='vendor_id'  value="{{ $product->vendor_id }}" />
+                                                            <input type="hidden" name='product_id'  value="{{ $product->id }}" />
+                                                            <input type="hidden" name='price'  value="{{ $product->price }}" />
+                                                        <div class="women">
+                                                            <h6><a href="{{url('/product/details/'.$product->id)}}">{{ $product->name }}</a></h6>
+                                                            <span class="size">{{ $product->size->name }} </span>
+                                                            <p ><em class="item_price">${{ $product->price }}</em></p>
+                                                            @if (auth()->check())
+                                                            <button class="btn btn-sm btn-primary">Add to cart</button>
+                                                            @else
+                                                            <a href="{{ url('/login') }}" data-text="Add To Cart" class="my-cart-b item_add">Add To Cart</a>
+                                                            @endif
+                                                            
+                                                       </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                </div>
+                                   <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
 			<!--new-arrivals-->
 				<!--accessories-->
 			<div class="accessories-w3l">
