@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/show/new/product/list', [ApiController::class, 'showNewProductList']);
+Route::get('/show/hot/product/list', [ApiController::class, 'showHotProductList']);
+Route::get('/show/discount/product/list', [ApiController::class, 'showDiscountProductList']);
+Route::post('/add/to/cart', [ApiController::class, 'addToCart']);
+

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Frontend\VendorController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,7 @@ Route::get('/vendor/dashboard', [VendorController::class, 'vendorDashboard']);
 Route::get('/vendor/product/create', [VendorController::class, 'vendorProductCreateform']);
 Route::post('/vendor/product/store', [VendorController::class, 'vendorProductStorage']);
 Route::get('/vendor/logout', [VendorController::class, 'vendorLogout']);
+
 
 //AdminnController
 Route::get('/admin/login', [AdminController::class, 'adminLoginFrom']);
@@ -83,6 +85,13 @@ Route::get('/admin/vendor/delete/{id}', [SupplierController::class, 'vendorDelet
 Route::get('/vendor/products', [SupplierController::class, 'vendorProducts']); 
 Route::get('/vendor/product/approved/{id}', [SupplierController::class, 'vendorProductApproved']);
 Route::get('/vendor/product/pending/{id}', [SupplierController::class, 'vendorProductPending']);
+Route::get('/vendor/orders', [SupplierController::class, 'vendorOrders']);
+Route::get('/vendor/pending/product', [SupplierController::class, 'vendorPendingProductList']);
+Route::get('/vendor/approved/product', [SupplierController::class, 'vendorApprovedProductList']);
+
+
+Route::get('/orders', [OrderController::class, 'customerOrders']);
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

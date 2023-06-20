@@ -32,7 +32,7 @@ class FrontendController extends Controller
 
     public function  productDetails($id)
 { 
-  $product = Product::find($id);
+   $product = Product::with('reviews')->find($id);
   return view('frontend.home.product-details', compact('product'));
 }
 
@@ -40,6 +40,7 @@ public function  customerReview(Request $request)
 { 
   $rating = new Review();
   $rating->user_id = auth()->user()->id;
+  $rating->product_id = $request->product_id;
   $rating->rating = $request->rating;
   $rating->message = $request->message;
   $rating->save();

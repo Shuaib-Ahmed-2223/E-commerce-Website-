@@ -84,12 +84,17 @@
                                                             <p ><em class="item_price">Price: ${{ $product->price }}</em></p>
                                                             <input type='number' name='qty' value= '1' min='1'/>
                                                             @if (auth()->check())
-                                                            <button class="btn btn-sm btn-primary" type='submit'>Add to cart</button>
+															@if ($product->qty> 0)
+															<button class="btn btn-sm btn-primary" type='submit'>Add to cart</button>
+															@else
+															<button class="btn btn-sm btn-primary" type='button'>Stock Out</button>
+															@endif
+                                                            
                                                             @else
                                                             <a href="{{ url('/login') }}" data-text="Add To Cart" class="my-cart-b item_add">Add To Cart</a>
                                                             @endif
                                                             
-                                                       </div>
+                                                       </div >
                                                         </form>
 									<!-- <div class="color-quality">
 										<h6>Quality :</h6>
@@ -334,19 +339,20 @@
 												</div>
 												<div role="tabpanel" class="tab-pane fade" id="reviews" aria-labelledby="reviews-tab">
 													<div class="descr">
+														@foreach ($product->reviews as $review)
 														<div class="reviews-top">
-															<div class="reviews-left">
-																<img src="images/men3.jpg" alt=" " class="img-responsive">
-															</div>
+															
 															<div class="reviews-right">
 																<ul>
-																	<li><a href="#">Admin</a></li>
+																	<li><a href="#">{{ $review->user->name }} </a></li>
 																	<li><a href="#"><i class="glyphicon glyphicon-share" aria-hidden="true"></i>Reply</a></li>
 																</ul>
-																<p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit.</p>
+																<p>{{ $review -> message }}</p>
 															</div>
 															<div class="clearfix"></div>
 														</div>
+														@endforeach
+														
 														@if(auth()->check())
 														<div class="reviews-bottom">
 															<h4>Add Reviews</h4>
@@ -356,6 +362,7 @@
 															</div>
 															<form action="{{ url('/review/store') }}" method="post">
 															@csrf
+															<input type="hidden" name='product_id'  value="{{ $product->id }}" />
 															<div class="block">
 															<div class="rating">
 							<input type="radio" id="star5" name="rating" value="5" />

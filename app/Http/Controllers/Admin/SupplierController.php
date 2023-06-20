@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vendor;
 use App\Models\Product;
+use App\Models\Order;
 class SupplierController extends Controller
 {
     public function vendors()
@@ -48,4 +49,23 @@ class SupplierController extends Controller
         $product->save();
         return redirect()->back()->withSuccess('Product has been pending');
     }
+
+    public function vendorOrders()
+    {
+        $orders = Order::with('vendor', 'user', 'products')->where('vendor_id', session()->get('vendorId'))->get();
+        return view('frontend.vendor.orders', compact('orders'));
+    }
+    
+    public function vendorApprovedProductList()
+    {
+        $orders = Order::with('vendor', 'user', 'products')->where('vendor_id', session()->get('vendorId'))->get();
+        return view('frontend.vendor.orders', compact('orders'));
+    }
+
+    public function vendorPendingProductList()
+    {
+        $products = Product::where('status', 0)->where('vendor_id', session()->get('vendorId'))->get();
+        return view('frontend.vendor.pending', compact('products'));
+    }
+
 }

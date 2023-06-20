@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Order_Details;
 
 class CartController extends Controller
@@ -67,7 +68,11 @@ class CartController extends Controller
            $orderDetails->address =$request->address;
            $orderDetails->save();
     }    
-          $cartEmpty = Cart::where('user_id', auth()->user()->id)->get();
+           $product = Product::where('id', $order->product_id)->first();
+           $product->qty =   $product->qty - $request->total_qty;
+           $product->save();
+         
+           $cartEmpty = Cart::where('user_id', auth()->user()->id)->get();
           foreach($cartEmpty as $cart){
           $cart->delete();
     }
